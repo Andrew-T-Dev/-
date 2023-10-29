@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 public class CalcView {
     private JFrame frame;
     private JTextField display;
-    private JButton[] numberButtons;
-    private JButton[] operatorButtons;
-    private JButton equalsButton;
+    private JGradientButton[] numberButtons;
+    private JGradientButton[] operatorButtons;
+    private JGradientButton equalsButton;
 
     public CalcView() {
         frame = new JFrame("AT 4-operations calculator");
@@ -24,21 +24,21 @@ public class CalcView {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 4));
 
-        numberButtons = new JButton[10];
+        numberButtons = new JGradientButton[10];
         for (int i = 0; i < 10; i++) {
-            numberButtons[i] = new JButton(String.valueOf(i));
+            numberButtons[i] = new JGradientButton(String.valueOf(i));
             buttonPanel.add(numberButtons[i]);
         }
 
-        operatorButtons = new JButton[4];
-        operatorButtons[0] = new JButton("+");
-        operatorButtons[1] = new JButton("-");
-        operatorButtons[2] = new JButton("*");
-        operatorButtons[3] = new JButton("/");
+        operatorButtons = new JGradientButton[4];
+        operatorButtons[0] = new JGradientButton("+");
+        operatorButtons[1] = new JGradientButton("-");
+        operatorButtons[2] = new JGradientButton("*");
+        operatorButtons[3] = new JGradientButton("/");
 
-        buttonPanel.add(new JButton());
+        buttonPanel.add(new JGradientButton(""));
 
-        equalsButton = new JButton("=");
+        equalsButton = new JGradientButton("=");
         buttonPanel.add(equalsButton);
 
         for (int i = 0; i < 4; ++i) {
@@ -70,5 +70,32 @@ public class CalcView {
 
     public void setDisplay(String text) {
         display.setText(text);
+    }
+
+    private static class JGradientButton extends JButton {
+        public JGradientButton(String text) {
+            super(text);
+            setContentAreaFilled(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D)g.create();
+            g2.setPaint(new GradientPaint(
+                    new Point(0, 0),
+                    getBackground(),
+                    new Point(0, getHeight()/3),
+                    Color.GREEN.darker()));
+            g2.fillRect(0, 0, getWidth(), getHeight()/3);
+            g2.setPaint(new GradientPaint(
+                    new Point(0, getHeight()/3),
+                    Color.GREEN.darker(),
+                    new Point(0, getHeight()),
+                    getBackground()));
+            g2.fillRect(0, getHeight()/3, getWidth(), getHeight());
+            g2.dispose();
+
+            super.paintComponent(g);
+        }
     }
 }
